@@ -21,3 +21,12 @@ class Exporter(Db):
     def get_all_tokens(self):
         query = "SELECT * FROM tokens"
         return self._execute_query(query)
+
+
+    def valid_token(self):
+        try:
+            with self.con.cursor() as cursor:
+                query = "SELECT * FROM tokens WHERE status=%s ORDER BY created_at LIMIT 1"
+                return self._execute_query(query, ("active",))
+        except pymysql.MySQLError as e:
+            raise RuntimeError(f"Greska pri ekstrakciji podataka")
