@@ -25,8 +25,15 @@ class Exporter(Db):
 
     def valid_token(self):
         try:
-            with self.con.cursor() as cursor:
-                query = "SELECT * FROM tokens WHERE status=%s ORDER BY created_at LIMIT 1"
-                return self._execute_query(query, ("active",))
+            query = "SELECT * FROM tokens WHERE status=%s ORDER BY created_at LIMIT 1"
+            return self._execute_query(query, ("active",))
         except pymysql.MySQLError as e:
-            raise RuntimeError(f"Greska pri ekstrakciji podataka")
+            raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
+
+
+    def export_travel_details(self):
+        try:
+            query = "SELECT * FROM travel_details"
+            return self._execute_query(query)
+        except pymysql.MySQLError as e:
+            raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
