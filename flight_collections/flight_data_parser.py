@@ -1,4 +1,4 @@
-from flight_search_service import FlightSearchService
+from flight_collections.flight_search_service import FlightSearchService
 
 
 

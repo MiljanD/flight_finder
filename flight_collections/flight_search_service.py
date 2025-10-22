@@ -1,9 +1,8 @@
 import requests
-from token_manager import TokenManager
+from token_generator.token_manager import TokenManager
 from exports.exporter import Exporter
 import os
 from dotenv import load_dotenv, find_dotenv
-import pprint
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path)

@@ -1,6 +1,4 @@
-from token_manager import TokenManager
-import requests
-
+from token_generator.token_manager import TokenManager
 
 token = TokenManager()
 valid_token = token.get_valid_token()
