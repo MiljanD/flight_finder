@@ -37,3 +37,19 @@ class Exporter(Db):
             return self._execute_query(query)
         except pymysql.MySQLError as e:
             raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
+
+
+    def export_last_added_flight_id(self):
+        query = "SELECT id FROM flights ORDER BY id DESC LIMIT 1"
+        return self._execute_query(query)
+
+
+
+    def is_cheaper_than_existing(self, travel_id):
+        query = "SELECT price FROM flights WHERE travel_id=%s ORDER BY price ASC LIMIT 1"
+        return self._execute_query(query, (travel_id, ))
+
+
+    def are_stored_flights(self, travel_id):
+        query = "SELECT id FROM flights WHERE travel_id=%s"
+        return self._execute_query(query, (travel_id, ))
