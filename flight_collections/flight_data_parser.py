@@ -18,8 +18,9 @@ class FlightDataParser:
         flight_data = self.flight_data.flight_details_collection()
         flight_details = []
         for data in flight_data:
+            travel_id = data["travel_id"]
             try:
-                for content in data["data"]:
+                for content in data["details"]["data"]:
                     departure = None
                     arrival = None
                     transfers = []
@@ -34,7 +35,7 @@ class FlightDataParser:
                                 transfers.append({"departure":seg["departure"], "arrival": seg["arrival"]})
 
                     price = content["price"]["grandTotal"]
-                    data = {"departure": departure, "arrival": arrival, "price": price, "transfers": transfers}
+                    data = {"travel_id": travel_id, "departure": departure, "arrival": arrival, "price": price, "transfers": transfers}
                     flight_details.append(data)
             except KeyError:
                 raise KeyError ("Neispravan kljuc u odzivu API servisa.")

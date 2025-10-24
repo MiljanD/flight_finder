@@ -13,6 +13,7 @@ class FlightDataStorage(Db):
         flights = self.flights.parse_flight_data()
 
         for flight in flights:
+            travel_id = flight["travel_id"]
             departure_time = flight["departure"]["at"]
             departure_terminal = flight["departure"]["terminal"]
             flight_price = float(flight["price"])
@@ -30,11 +31,11 @@ class FlightDataStorage(Db):
                 arrival_time = transfers[-1]["arrival"]["at"]
                 arrival_terminal = transfers[-1]["arrival"]["terminal"]
                 arrival_at_transfer_airport = flight["arrival"]["at"]
-                for transfer in transfers[:-1]:
+                for transfer in transfers:
                     transfer_airport = transfer["departure"]["iataCode"]
                     departure_from_transfer_airport = transfer["departure"]["at"]
 
-            print(departure_time, departure_terminal, arrival_terminal, arrival_time,
+            print(travel_id, departure_time, departure_terminal, arrival_terminal, arrival_time,
                   flight_price, transfer_airport, departure_from_transfer_airport, arrival_at_transfer_airport)
 
 

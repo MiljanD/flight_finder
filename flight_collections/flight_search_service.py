@@ -75,14 +75,16 @@ class FlightSearchService:
             return []
 
         collected_data = []
+        travel_id = None
         for flight in flight_details:
             self.location_code = flight["location_code"]
             self.destination_code = flight["destination_code"]
             self.departure_date = flight["travel_date"]
             self.passengers = flight["passengers"]
             self.price_limit = flight["desired_price"]
+            travel_id = flight["id"]
 
-            collected_data.append(self.get_flights())
+            collected_data.append({"travel_id": travel_id, "details":self.get_flights()})
             self.reset_travel_data()
 
         return collected_data
