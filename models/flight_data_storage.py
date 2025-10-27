@@ -5,6 +5,9 @@ from models.db import Db
 
 
 class FlightDataStorage(Db):
+    """
+    Responsible for storing flight data into database tables.
+    """
     def __init__(self):
         super().__init__()
         self.con = self._get_connection()
@@ -12,7 +15,12 @@ class FlightDataStorage(Db):
         self.exports = Exporter()
 
 
-    def _execute_storing_query(self, query, params):
+    def _execute_storing_query(self, query, params) -> None:
+        """
+        Executes a parameterized SQL query to store data in database.
+        :param query: Query that will be executed.
+        :param params: Necessary parameters for  executing query.
+        """
         try:
             with self.con.cursor() as cursor:
                 cursor.execute(query, params)
@@ -21,7 +29,11 @@ class FlightDataStorage(Db):
             raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
 
 
-    def store_flight_data(self, flight_params):
+    def store_flight_data(self, flight_params) -> None:
+        """
+        Responsible for storing flight data.
+        :param flight_params: Flight data parameters.
+        """
         query = ("INSERT INTO flights "
                  "(travel_id, departure_time, departure_terminal, arrival_time, arrival_terminal, price) "
                  "VALUES (%s, %s, %s, %s, %s, %s)")
@@ -29,7 +41,11 @@ class FlightDataStorage(Db):
         self._execute_storing_query(query, params)
 
 
-    def store_transfer_data(self, transfer_params):
+    def store_transfer_data(self, transfer_params) -> None:
+        """
+        Stores flight transfer data into the transfers table.
+        :param transfer_params: Flight transfer parameters.
+        """
         query = ("INSERT INTO transfers"
                  "(flight_id, transfer_airport, arrival_time, departure_time)"
                  "VALUES (%s, %s, %s, %s)")
@@ -37,11 +53,21 @@ class FlightDataStorage(Db):
         self._execute_storing_query(query, params)
 
 
-    def flight_data_storage(self):
+    def flight_data_storage(self) -> None:
+        """
+        Responsible for collecting  and storing flight and transfer data.
+        Storing is done by using store_flight_data and store_transfer_data methods.
+        :return:
+        """
+
+        # Collected data from Amadeus API service.
         flights = self.flights.parse_flight_data()
+
+        # Variables to track current travel ID and its lowest price.
         comparison_travel_id = None
         lowest_stored_price = None
 
+        # Looping over collected data
         for flight in flights:
             travel_id = flight["travel_id"]
             departure_time = flight["departure"]["at"]
@@ -76,6 +102,7 @@ class FlightDataStorage(Db):
                     self.store_flight_data(flight_parameters)
                     arrival_at_transfer_airport = flight["arrival"]["at"]
 
+                    # ID of last stored flight for connection to possible transfer related to that flight.
                     flight_id = self.exports.export_last_added_flight_id()[0]["id"]
 
                     for transfer in transfers:
