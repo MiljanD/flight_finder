@@ -26,7 +26,7 @@ class FlightDataStorage(Db):
                 cursor.execute(query, params)
                 self.con.commit()
         except pymysql.MySQLError as e:
-            raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
+            raise RuntimeError(f"Greska pri upisu podataka: {e}")
 
 
     def store_flight_data(self, flight_params) -> None:

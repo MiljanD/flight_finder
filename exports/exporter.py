@@ -24,23 +24,23 @@ class Exporter(Db):
 
 
     def valid_token(self):
-        try:
-            query = "SELECT * FROM tokens WHERE status=%s ORDER BY created_at LIMIT 1"
-            return self._execute_query(query, ("active",))
-        except pymysql.MySQLError as e:
-            raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
+        query = "SELECT * FROM tokens WHERE status=%s ORDER BY created_at LIMIT 1"
+        return self._execute_query(query, ("active",))
 
 
     def export_travel_details(self):
-        try:
-            query = "SELECT * FROM travel_details"
-            return self._execute_query(query)
-        except pymysql.MySQLError as e:
-            raise RuntimeError(f"Greska pri ekstrakciji podataka: {e}")
+        query = "SELECT * FROM travel_details"
+        return self._execute_query(query)
+
 
 
     def export_last_added_flight_id(self):
         query = "SELECT id FROM flights ORDER BY id DESC LIMIT 1"
+        return self._execute_query(query)
+
+
+    def export_date_and_id(self):
+        query = "SELECT id, travel_date FROM travel_details"
         return self._execute_query(query)
 
 
@@ -53,3 +53,11 @@ class Exporter(Db):
     def are_stored_flights(self, travel_id):
         query = "SELECT id FROM flights WHERE travel_id=%s"
         return self._execute_query(query, (travel_id, ))
+
+
+
+
+
+if __name__ == "__main__":
+    export = Exporter()
+    print(export.export_date_and_id())
