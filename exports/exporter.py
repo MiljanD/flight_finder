@@ -55,9 +55,19 @@ class Exporter(Db):
         return self._execute_query(query, (travel_id, ))
 
 
+    def get_table_columns(self, table_name) -> list[str]:
+        query = f"SHOW COLUMNS FROM {table_name}"
+        return self._execute_query(query)
+
+
+    def id_exists(self, table_name, identifier) -> bool:
+        query = f"SELECT id FROM {table_name} WHERE id=%s"
+        result = self._execute_query(query, (identifier, ))
+        return bool(result)
+
 
 
 
 if __name__ == "__main__":
     export = Exporter()
-    print(export.export_date_and_id())
+    print(export.id_exists("travel_details", 5))

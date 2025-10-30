@@ -212,6 +212,9 @@ class Travels(Db):
         Removes travel record by ID.
         :param travel_id: Travel record ID.
         """
+        if not self.exports.id_exists("travel_details", travel_id):
+            raise ValueError("ID putovanja ne  postoji u tabeli.")
+
         query = "DELETE FROM travel_details WHERE id=%s"
         self._execute_query(query, (travel_id, ))
 
@@ -223,6 +226,12 @@ class Travels(Db):
         :param column_name: Name of column that will be updated.
         :param new_value: New value that will be entered into database table.
         """
+        valid_columns = self.exports.get_table_columns("travel_details")
+        if column_name not in valid_columns:
+            raise ValueError("Nepoznata kolona.")
+
+        if not self.exports.id_exists("travel_details", travel_id):
+            raise ValueError("ID putovanja ne  postoji u tabeli.")
+
         query = f"UPDATE travel_details SET {column_name}=%s WHERE id=%s"
         self._execute_query(query, (new_value, travel_id))
-
