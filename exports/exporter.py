@@ -66,8 +66,24 @@ class Exporter(Db):
         return bool(result)
 
 
+    def export_complete_flights_data(self):
+        query = ("SELECT "
+                 "td.location AS 'Polazna Lokacija', td.destination AS 'Odrediste',"
+                 "td.travel_date AS 'Datum polaska', td.passengers AS 'Broj putnika', "
+                 "f.departure_time AS 'Vreme polaska', f.departure_terminal AS 'Terminal polaska', "
+                 "f.arrival_time AS 'Vreme pristizanja', f.arrival_terminal AS 'Terminal pristizanja', f.price AS 'Cena',"
+                 "t.transfer_airport AS 'Aerodrom transfer', t.arrival_time AS 'Vreme stizanja na transfer', "
+                 "t.departure_time AS 'Vreme polaska sa transfera' "
+                 "FROM travel_details td "
+                 "LEFT JOIN flights f ON f.travel_id = td.id "
+                 "LEFT JOIN transfers t ON t.flight_id = f.id "
+                 "ORDER BY td.id")
+
+        return self._execute_query(query)
+
+
 
 
 if __name__ == "__main__":
     export = Exporter()
-    print(export.id_exists("travel_details", 5))
+    print(export.export_complete_flights_data())

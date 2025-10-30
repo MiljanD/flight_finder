@@ -66,7 +66,7 @@ class FlightDataStorage(Db):
         # Variables to track current travel ID and its lowest price.
         comparison_travel_id = None
         lowest_stored_price = None
-
+        print(flights)
         # Looping over collected data
         for flight in flights:
             travel_id = flight["travel_id"]
@@ -87,16 +87,21 @@ class FlightDataStorage(Db):
 
 
             if lowest_stored_price is None or lowest_stored_price > flight_price:
+
                 if not flight["transfers"]:
                     arrival_time = flight["arrival"]["at"]
-                    arrival_terminal = flight["arrival"]["terminal"]
+                    if "terminal" in flight["arrival"] and flight["arrival"]["terminal"]:
+                        arrival_terminal = flight["arrival"]["terminal"]
+
                     flight_parameters = (travel_id, departure_time, departure_terminal, arrival_time, arrival_terminal,
                                          flight_price)
+
                     self.store_flight_data(flight_parameters)
                 else:
                     transfers = flight["transfers"]
                     arrival_time = transfers[-1]["arrival"]["at"]
-                    arrival_terminal = transfers[-1]["arrival"]["terminal"]
+                    if "terminal" in transfers[-1]["arrival"] and transfers[-1]["arrival"]["terminal"]:
+                        arrival_terminal = transfers[-1]["arrival"]["terminal"]
                     flight_parameters = (travel_id, departure_time, departure_terminal, arrival_time, arrival_terminal,
                                          flight_price)
                     self.store_flight_data(flight_parameters)
@@ -112,3 +117,8 @@ class FlightDataStorage(Db):
                         transfer_parameters = (flight_id, transfer_airport, arrival_at_transfer_airport,
                                                departure_from_transfer_airport)
                         self.store_transfer_data(transfer_parameters)
+
+
+if __name__ == "__main__":
+    storage = FlightDataStorage()
+    storage.flight_data_storage()
