@@ -138,7 +138,7 @@ class Travels(Db):
         Sets desired price limit for specific travel.
         :param price: Price limit entered by user.
         """
-        if not price or price <= 0:
+        if not price or int(price) <= 0:
             raise ValueError("Zeljena cena mora biti unesena i veca od 0.")
 
         self.__desired_price = int(price)
@@ -159,7 +159,7 @@ class Travels(Db):
         Sets number of passengers for specific travel.
         :param passengers: Number of passengers entered by user.
         """
-        if not passengers or passengers <= 0:
+        if not passengers or int(passengers) <= 0:
             raise ValueError("Broj putnika mora biti unesen i veci od 0.")
 
         self.__passengers = int(passengers)
@@ -183,7 +183,7 @@ class Travels(Db):
         """
         Stores travel details entered by user into database
         """
-        query = ("INSERT INTO flight_details "
+        query = ("INSERT INTO travel_details "
                  "(location, location_code, destination, destination_code, travel_date, passengers, desired_price)"
                  "VALUES (%s, %s, %s, %s, %s, %s, %s)"
                  )

@@ -66,7 +66,7 @@ class FlightDataStorage(Db):
         # Variables to track current travel ID and its lowest price.
         comparison_travel_id = None
         lowest_stored_price = None
-        print(flights)
+
         # Looping over collected data
         for flight in flights:
             travel_id = flight["travel_id"]
